@@ -7,11 +7,20 @@ import (
 	"strings"
 )
 
+// DefaultDelimiter is used when no delimiter is passed
+// to the Marshal() function
+const DefaultDelimiter = "."
+
 // Marshal returns the JSON encoding of keysAndValues.
 // Returns marshaled []byte and error in case if it can't be marshaled
-func Marshal(keysAndValues map[string]string) ([]byte, error) {
+func Marshal(keysAndValues map[string]string, delimiter string) ([]byte, error) {
 	var result interface{}
 	var err error
+
+	if delimiter == "" {
+		delimiter = DefaultDelimiter
+	}
+
 	for key, value := range keysAndValues {
 		if err = buildEmbedded(&result, strings.Split(key, ".")[:], value); err != nil {
 			return nil, err
